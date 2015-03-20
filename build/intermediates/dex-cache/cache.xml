@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<items version="2" >
+
+    <item
+        jar="/Users/jonaharrah/dev/coursera-android/Labs/ModernArtUILab/ModernArtUILab/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="2c91c949a45a21cdecf26e03951e46c7beec9ad8">
+        <dex dex="/Users/jonaharrah/dev/coursera-android/Labs/ModernArtUILab/ModernArtUILab/app/build/intermediates/pre-dexed/debug/classes-2aa9f069e561bb4a320bac77658bb668b7f177d7.jar" />
+    </item>
+    <item
+        jar="/Users/jonaharrah/dev/coursera-android/Labs/ModernArtUILab/ModernArtUILab/app/build/intermediates/exploded-aar/com.android.support/support-v4/21.0.3/libs/internal_impl-21.0.3.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="01ec05bfbafcc07646ba813000bf2ef11742dd03">
+        <dex dex="/Users/jonaharrah/dev/coursera-android/Labs/ModernArtUILab/ModernArtUILab/app/build/intermediates/pre-dexed/debug/internal_impl-21.0.3-dec63a1cc2eb773bc7715eed0d97064ed46cfc14.jar" />
+    </item>
+    <item
+        jar="/Users/jonaharrah/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/21.0.3/support-annotations-21.0.3.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="4b74cefe1f0c1b819e7260c8627a14674e37fd35">
+        <dex dex="/Users/jonaharrah/dev/coursera-android/Labs/ModernArtUILab/ModernArtUILab/app/build/intermediates/pre-dexed/debug/support-annotations-21.0.3-4e01eeb5f9b0a9738e32b5adaafd7240f733a378.jar" />
+    </item>
+    <item
+        jar="/Users/jonaharrah/dev/coursera-android/Labs/ModernArtUILab/ModernArtUILab/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/21.0.3/classes.jar"
+        jumboMode="false"
+        revision="21.1.2"
+        sha1="81d42bf983a8741f4888a6e333e454e4a5e0eeb7">
+        <dex dex="/Users/jonaharrah/dev/coursera-android/Labs/ModernArtUILab/ModernArtUILab/app/build/intermediates/pre-dexed/debug/classes-567f3e6a8a3e2eec9d574c3f84b42f4b5a95ad48.jar" />
+    </item>
+
+</items>
