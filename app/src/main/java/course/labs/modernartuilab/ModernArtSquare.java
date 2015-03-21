@@ -3,7 +3,7 @@ package course.labs.modernartuilab;
 import android.widget.TextView;
 
 public class ModernArtSquare {
-    private TextView mTextView;
+    private int mTextViewId;
 
     private int startColorRed;
     private int startColorGreen;
@@ -12,10 +12,10 @@ public class ModernArtSquare {
     private int endColorGreen;
     private int endColorBlue;
 
-    public ModernArtSquare(TextView mTextView, int startColorRed, int startColorGreen,
+    public ModernArtSquare(int mTextViewId, int startColorRed, int startColorGreen,
                            int startColorBlue, int endColorRed, int endColorGreen,
                            int endColorBlue) {
-        this.mTextView = mTextView;
+        this.mTextViewId = mTextViewId;
         this.startColorRed = startColorRed;
         this.startColorGreen = startColorGreen;
         this.startColorBlue = startColorBlue;
@@ -24,8 +24,12 @@ public class ModernArtSquare {
         this.endColorBlue = endColorBlue;
     }
 
-    public TextView getmTextView() {
-        return mTextView;
+    public int getTextViewId() {
+        return mTextViewId;
+    }
+
+    public void setTextViewId(int textViewId) {
+        this.mTextViewId = textViewId;
     }
 
     public int getStartColorRed() {

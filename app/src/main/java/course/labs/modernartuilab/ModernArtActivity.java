@@ -1,14 +1,10 @@
 package course.labs.modernartuilab;
 
 import android.app.AlertDialog;
-import android.app.DialogFragment;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
+import android.app.FragmentManager;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffColorFilter;
 import android.net.Uri;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
@@ -19,15 +15,13 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 
 public class ModernArtActivity extends ActionBarActivity {
 
-    static private final String URL = "http://www.moma.org";
-
     // String for LogCat documentation
-    private final static String TAG = "ModernArtActivity";
+    private static final String TAG = "ModernArtActivity";
+    private static final String URL = "http://www.moma.org";
 
     // int threshold for how dark "grey" should get
     private final int GREY_THRESHOLD = 100;
@@ -35,19 +29,35 @@ public class ModernArtActivity extends ActionBarActivity {
     // int of max color for RGB, which is 255
     private final int RGB_MAX_VALUE = 255;
 
-    private ModernArtSquare[] modernArtSquares = new ModernArtSquare[5];
+    private TextView[] mTextViews = new TextView[5];
     private int mPercentage = Integer.MIN_VALUE;
+    private ModernArtDataFragment dataFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_modern_art);
 
+        mTextViews[0] = (TextView) findViewById(R.id.textViewBottomLeft);
+        mTextViews[1] = (TextView) findViewById(R.id.textViewBottomRight);
+        mTextViews[2] = (TextView) findViewById(R.id.textViewTopLeft);
+        mTextViews[3] = (TextView) findViewById(R.id.textViewTopRight);
+        mTextViews[4] = (TextView) findViewById(R.id.textViewMediumRight);
+
+        FragmentManager fm = this.getFragmentManager();
+        dataFragment = (ModernArtDataFragment)fm.findFragmentByTag("data");
+        if(dataFragment == null) {
+            dataFragment = new ModernArtDataFragment();
+            fm.beginTransaction().add(dataFragment, "data").commit();
+            loadModernArtSquares(true);
+        } else {
+            loadModernArtSquares(false);
+        }
+
         SeekBar colorControl = (SeekBar) findViewById(R.id.seekBar);
         colorControl.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser){
-                Log.i(TAG, "progress value: " + progress);
                 ModernArtActivity.this.updateSquareColors(progress);
             }
 
@@ -57,17 +67,8 @@ public class ModernArtActivity extends ActionBarActivity {
 
         });
 
-        TextView[] textViews = {(TextView) findViewById(R.id.textViewBottomLeft),
-            (TextView) findViewById(R.id.textViewBottomRight),
-            (TextView) findViewById(R.id.textViewTopLeft),
-            (TextView) findViewById(R.id.textViewTopRight),
-            (TextView) findViewById(R.id.textViewMediumRight)};
-
-        loadModernArtSquares(textViews);
-
         this.updateSquareColors(0);
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -111,22 +112,27 @@ public class ModernArtActivity extends ActionBarActivity {
     /**
      * This method is used to generated ModertArtSquares with random start/end colors,
      * with one of them randomly being a white/grey color that won't change.
-     * @param squareTextViews
      */
-    private void loadModernArtSquares(final TextView[] squareTextViews) {
-        int whiteGreyTextViewIdx = this.getRandomIntValue(squareTextViews.length);
+    private void loadModernArtSquares(boolean isNewSquare) {
+        if(dataFragment.getWhiteGreyTextViewIdx() == Integer.MIN_VALUE) {
+            dataFragment.setWhiteGreyTextViewIdx(this.getRandomIntValue(mTextViews.length));
+        }
 
-        for (int i = 0; i < squareTextViews.length; i++) {
-            if(whiteGreyTextViewIdx == i) {
+        for (int i = 0; i < mTextViews.length; i++) {
+            if(dataFragment.getWhiteGreyTextViewIdx() == i) {
 
                 // create white/grey box for both start and end colors
-                int greyColor = getRandomGreyValue();
+                if(isNewSquare) {
+                    int greyColor = getRandomGreyValue();
 
-                modernArtSquares[i] = new ModernArtSquare(squareTextViews[i], greyColor,
+                    dataFragment.getData()[i] = new ModernArtSquare(mTextViews[i].getId(), greyColor,
                         greyColor, greyColor, greyColor, greyColor, greyColor);
+                } else {
+                    dataFragment.getData()[i].setTextViewId(mTextViews[i].getId());
+                }
 
                 // begin fun: add an onClick listener to change color, if mPercentage is 0 or 100.
-                squareTextViews[i].setOnClickListener(new View.OnClickListener() {
+                mTextViews[i].setOnClickListener(new View.OnClickListener() {
 
                     @Override
                     public void onClick(View v) {
@@ -143,13 +149,18 @@ public class ModernArtActivity extends ActionBarActivity {
                 // end fun
             } else {
 
-                modernArtSquares[i] = new ModernArtSquare(squareTextViews[i],
-                        getRandomIntValue(RGB_MAX_VALUE),getRandomIntValue(RGB_MAX_VALUE),
-                        getRandomIntValue(RGB_MAX_VALUE),getRandomIntValue(RGB_MAX_VALUE),
-                        getRandomIntValue(RGB_MAX_VALUE),getRandomIntValue(RGB_MAX_VALUE));
+                if(isNewSquare) {
+
+                    dataFragment.getData()[i] = new ModernArtSquare(mTextViews[i].getId(),
+                            getRandomIntValue(RGB_MAX_VALUE), getRandomIntValue(RGB_MAX_VALUE),
+                            getRandomIntValue(RGB_MAX_VALUE), getRandomIntValue(RGB_MAX_VALUE),
+                            getRandomIntValue(RGB_MAX_VALUE), getRandomIntValue(RGB_MAX_VALUE));
+                } else {
+                    dataFragment.getData()[i].setTextViewId(mTextViews[i].getId());
+                }
 
                 // begin fun: add an onClick listener to change color, if mPercentage is 0 or 100.
-                squareTextViews[i].setOnClickListener(new View.OnClickListener() {
+                mTextViews[i].setOnClickListener(new View.OnClickListener() {
 
                     @Override
                     public void onClick(View v) {
@@ -196,7 +207,7 @@ public class ModernArtActivity extends ActionBarActivity {
 
             mPercentage = scrollBarValue;
 
-            for (ModernArtSquare mas : modernArtSquares) {
+            for (ModernArtSquare mas : dataFragment.getData()) {
                 updateSquareColor(mas);
             }
 
@@ -204,7 +215,7 @@ public class ModernArtActivity extends ActionBarActivity {
     }
 
     private void updateSquareColor(ModernArtSquare mas) {
-        mas.getmTextView().setBackgroundColor(Color.rgb(
+         findViewById(mas.getTextViewId()).setBackgroundColor(Color.rgb(
             getCalculatedColor(mas.getStartColorRed(), mas.getEndColorRed(), mPercentage),
             getCalculatedColor(mas.getStartColorGreen(), mas.getEndColorGreen(), mPercentage),
             getCalculatedColor(mas.getStartColorBlue(), mas.getEndColorBlue(), mPercentage)));
@@ -214,8 +225,8 @@ public class ModernArtActivity extends ActionBarActivity {
      * This method finds the applicable ModernArtSquare, based on the id of the text view inside it.
      */
     private ModernArtSquare findSquareById(int textViewId) {
-        for (ModernArtSquare square : this.modernArtSquares) {
-            if(square.getmTextView().getId() == textViewId) {
+        for (ModernArtSquare square : dataFragment.getData()) {
+            if(square.getTextViewId() == textViewId) {
                 return square;
             }
         }
